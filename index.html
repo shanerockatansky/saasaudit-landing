@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SaaS Stack Auditor — Stop Wasting Money on Software</title>
+  <meta name="description" content="We audit your software stack, find the waste, and tell you exactly what to cut — in 48 hours. Most companies save $800–$2,000/month. The audit costs $299.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0f172a;
+      --navy-mid: #1e293b;
+      --teal: #14b8a6;
+      --teal-dark: #0d9488;
+      --teal-light: #5eead4;
+      --white: #ffffff;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-400: #94a3b8;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --text: #1e293b;
+      --radius: 8px;
+      --radius-lg: 16px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    /* ── UTILITIES ── */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .container--wide { max-width: 1100px; }
+
+    .tag {
+      display: inline-block;
+      background: rgba(20,184,166,0.15);
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+
+    h2.section-title {
+      font-size: clamp(1.6rem, 4vw, 2.25rem);
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+
+    .section-lead {
+      font-size: 1.1rem;
+      color: var(--gray-600);
+      max-width: 640px;
+      margin: 0 auto 48px;
+    }
+
+    .text-center { text-align: center; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      border-radius: var(--radius);
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.15s;
+      cursor: pointer;
+      border: none;
+      white-space: nowrap;
+    }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary {
+      background: var(--teal);
+      color: var(--white);
+    }
+    .btn-primary-large {
+      background: var(--teal);
+      color: var(--white);
+      font-size: 1.15rem;
+      padding: 18px 36px;
+      border-radius: var(--radius);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--teal-light);
+      border: 1.5px solid var(--teal-light);
+      font-size: 0.95rem;
+      padding: 12px 24px;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      background: var(--navy);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .nav-logo {
+      color: var(--white);
+      font-weight: 800;
+      font-size: 1.1rem;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .nav-logo span { color: var(--teal); }
+    .nav-cta { font-size: 0.875rem; padding: 9px 18px; }
+
+    /* ── HERO ── */
+    #hero {
+      background: var(--navy);
+      padding: 96px 24px 104px;
+      text-align: center;
+    }
+    #hero h1 {
+      font-size: clamp(2rem, 5.5vw, 3.5rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1;
+      max-width: 780px;
+      margin: 0 auto 24px;
+      letter-spacing: -0.02em;
+    }
+    #hero h1 span { color: var(--teal); }
+    #hero .subheadline {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: #94a3b8;
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.65;
+    }
+    .hero-cta-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    @media (min-width: 480px) {
+      .hero-cta-group { flex-direction: row; justify-content: center; }
+    }
+    .hero-trust {
+      margin-top: 40px;
+      color: #64748b;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .hero-trust::before, .hero-trust::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: #334155;
+    }
+
+    /* ── PROBLEM ── */
+    #problem {
+      background: var(--white);
+      padding: 96px 24px;
+    }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 48px;
+    }
+    @media (min-width: 640px) {
+      .problem-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 900px) {
+      .problem-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .stat-card {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .stat-card .stat-number {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--teal);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-card .stat-label {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      line-height: 1.4;
+    }
+    .problem-body {
+      max-width: 680px;
+      margin: 48px auto 0;
+    }
+    .problem-body p {
+      color: var(--gray-600);
+      font-size: 1.05rem;
+      margin-bottom: 16px;
+      line-height: 1.75;
+    }
+    .problem-body p strong { color: var(--text); }
+    .problem-body .kicker {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-top: 24px;
+      margin-bottom: 0;
+    }
+
+    /* ── HOW IT WORKS ── */
+    #how-it-works {
+      background: var(--gray-50);
+      padding: 96px 24px;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 48px;
+    }
+    @media (min-width: 700px) {
+      .steps { grid-template-columns: repeat(3, 1fr); }
+    }
+    .step {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      position: relative;
+    }
+    .step-number {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--teal);
+      color: var(--white);
+      font-weight: 900;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .step h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .step p {
+      font-size: 0.9375rem;
+      color: var(--gray-600);
+      line-height: 1.65;
+    }
+
+    /* ── PRICING ── */
+    #pricing {
+      background: var(--white);
+      padding: 96px 24px;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 48px;
+    }
+    @media (min-width: 700px) {
+      .pricing-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .pricing-card {
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .pricing-card.featured {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(20,184,166,0.12);
+    }
+    .featured-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--teal);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+    .pricing-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+    .pricing-card h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .price {
+      font-size: 2.25rem;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .price-note {
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      margin-bottom: 24px;
+    }
+    .pricing-features {
+      list-style: none;
+      margin-bottom: 32px;
+      flex: 1;
+    }
+    .pricing-features li {
+      font-size: 0.9rem;
+      color: var(--gray-700);
+      padding: 7px 0;
+      border-bottom: 1px solid var(--gray-100);
+      padding-left: 20px;
+      position: relative;
+      line-height: 1.4;
+    }
+    .pricing-features li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--teal);
+      font-weight: 700;
+    }
+    .pricing-cta { width: 100%; text-align: center; }
+
+    /* ── GUARANTEE ── */
+    #guarantee {
+      background: var(--navy);
+      padding: 72px 24px;
+      text-align: center;
+    }
+    .guarantee-box {
+      max-width: 640px;
+      margin: 0 auto;
+      border: 1.5px solid rgba(20,184,166,0.4);
+      border-radius: var(--radius-lg);
+      padding: 48px 40px;
+    }
+    .guarantee-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+    #guarantee h2 {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    #guarantee p {
+      color: #94a3b8;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    #guarantee p strong { color: var(--teal-light); }
+    .guarantee-sub {
+      font-size: 0.875rem !important;
+      color: #64748b !important;
+      font-style: italic;
+    }
+
+    /* ── TESTIMONIALS ── */
+    #testimonials {
+      background: var(--gray-50);
+      padding: 96px 24px;
+    }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 48px;
+    }
+    @media (min-width: 640px) {
+      .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .testimonial {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+    }
+    .testimonial-quote {
+      font-size: 1.05rem;
+      color: var(--gray-700);
+      line-height: 1.7;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+    .testimonial-quote::before { content: '\201C'; color: var(--teal); font-size: 1.5em; line-height: 0; vertical-align: -0.3em; margin-right: 2px; }
+    .testimonial-quote::after  { content: '\201D'; color: var(--teal); font-size: 1.5em; line-height: 0; vertical-align: -0.3em; margin-left: 2px; }
+    .testimonial-author {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--gray-600);
+    }
+    .testimonial-stars {
+      color: #f59e0b;
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+    }
+
+    /* ── FAQ ── */
+    #faq {
+      background: var(--white);
+      padding: 96px 24px;
+    }
+    .faq-list {
+      max-width: 680px;
+      margin: 48px auto 0;
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .faq-item:first-child { border-top: 1px solid var(--gray-200); }
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--navy);
+      cursor: pointer;
+      list-style: none;
+      gap: 16px;
+    }
+    .faq-question::-webkit-details-marker { display: none; }
+    .faq-question::after {
+      content: '+';
+      font-size: 1.4rem;
+      color: var(--teal);
+      font-weight: 400;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+    details[open] .faq-question::after {
+      transform: rotate(45deg);
+    }
+    .faq-answer {
+      padding: 0 0 20px;
+      color: var(--gray-600);
+      font-size: 0.9375rem;
+      line-height: 1.7;
+    }
+
+    /* ── FINAL CTA ── */
+    #final-cta {
+      background: var(--navy);
+      padding: 96px 24px;
+      text-align: center;
+    }
+    #final-cta h2 {
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 900;
+      color: var(--white);
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    #final-cta h2 span { color: var(--teal); }
+    #final-cta p {
+      color: #94a3b8;
+      font-size: 1.1rem;
+      max-width: 520px;
+      margin: 0 auto 36px;
+      line-height: 1.65;
+    }
+    .final-cta-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    @media (min-width: 480px) {
+      .final-cta-group { flex-direction: row; justify-content: center; }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 32px 24px;
+      text-align: center;
+    }
+    footer p {
+      color: #475569;
+      font-size: 0.875rem;
+    }
+    footer a { color: var(--teal); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── ROI MATH ── */
+    .roi-block {
+      background: var(--navy);
+      color: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 40px 36px;
+      margin: 48px auto 0;
+      max-width: 640px;
+    }
+    .roi-block h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--teal-light);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.8rem;
+    }
+    .roi-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.9375rem;
+      color: #94a3b8;
+    }
+    .roi-row:last-child { border-bottom: none; }
+    .roi-row .roi-label { }
+    .roi-row .roi-value { font-weight: 700; color: var(--white); }
+    .roi-row.roi-highlight .roi-value { color: var(--teal-light); font-size: 1.15rem; }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="nav-logo">saas<span>audit</span>.io</a>
+  <a href="mailto:shane@rockatansky.co" class="btn btn-primary nav-cta">Start My Audit → $299</a>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="container">
+    <div class="tag">SaaS Stack Audit</div>
+    <h1>You're probably wasting <span>$1,000/month</span> on SaaS you don't need.</h1>
+    <p class="subheadline">We audit your software stack, find the waste, and tell you exactly what to cut — in 48 hours. Most companies save $800–$2,000/month. The audit costs $299.</p>
+    <div class="hero-cta-group">
+      <a href="mailto:shane@rockatansky.co" class="btn btn-primary-large">Get My Audit →</a>
+      <a href="mailto:shane@rockatansky.co" class="btn btn-ghost">Book a free 15-min call →</a>
+    </div>
+    <p class="hero-trust">No software access needed &nbsp;·&nbsp; 48-hour turnaround &nbsp;·&nbsp; 100% money-back guarantee</p>
+  </div>
+</section>
+
+<!-- ── PROBLEM ── -->
+<section id="problem">
+  <div class="container">
+    <div class="text-center">
+      <div class="tag">The Problem</div>
+      <h2 class="section-title">SaaS creep is real. And it's expensive.</h2>
+    </div>
+
+    <div class="problem-grid">
+      <div class="stat-card">
+        <div class="stat-number">18</div>
+        <div class="stat-label">Average software tools at a 10–20 person company</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">$3,500</div>
+        <div class="stat-label">Average monthly SaaS spend</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">25–40%</div>
+        <div class="stat-label">Estimated waste from redundancy and unused seats</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">$0</div>
+        <div class="stat-label">Amount most companies spend auditing their stack</div>
+      </div>
+    </div>
+
+    <div class="problem-body">
+      <p>The average 10–20 person company runs 18 software tools and spends $3,500/month on them. Nobody planned it. Tools got added one at a time. Seats weren't cleaned up. Vendors kept charging.</p>
+      <p>Now you're paying for <strong>3 tools that do the same thing</strong>, 2 tools nobody uses, and a handful of subscriptions that auto-renewed without anyone noticing.</p>
+      <p class="kicker">The waste is real. The fix is simple. Nobody's done the work.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section id="how-it-works">
+  <div class="container">
+    <div class="text-center">
+      <div class="tag">How It Works</div>
+      <h2 class="section-title">Three steps. 48 hours. Done.</h2>
+      <p class="section-lead">You spend 10 minutes filling out a form. We spend 48 hours doing the analysis. You get a clean, actionable report with the savings math done for you.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Fill out the intake form (10 min)</h3>
+        <p>Tell us what tools you're running and what they cost. No software access needed — just a list and rough numbers.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>We do the analysis</h3>
+        <p>We map your stack, identify redundancy, find consolidation opportunities, and build your savings report.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>You get the report + a call</h3>
+        <p>Full breakdown, recommended cuts, ROI math, and a 30-minute call to walk through it together.</p>
+      </div>
+    </div>
+
+    <div class="roi-block">
+      <h3>Typical Customer Scenario</h3>
+      <div class="roi-row">
+        <span class="roi-label">Monthly SaaS spend</span>
+        <span class="roi-value">$4,200</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-label">Identified waste</span>
+        <span class="roi-value">$1,100/mo</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-label">Annual savings</span>
+        <span class="roi-value">$13,200</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-label">Cost of audit</span>
+        <span class="roi-value">$299</span>
+      </div>
+      <div class="roi-row roi-highlight">
+        <span class="roi-label">ROI in year one</span>
+        <span class="roi-value">44×</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section id="pricing">
+  <div class="container">
+    <div class="text-center">
+      <div class="tag">Pricing</div>
+      <h2 class="section-title">$299 to find out where your money is going.</h2>
+      <p class="section-lead">Choose the level of support that fits your team. All tiers start with the same thorough audit.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Option A -->
+      <div class="pricing-card featured">
+        <div class="featured-badge">Most Popular</div>
+        <div class="pricing-label">Option A</div>
+        <h3>One-Time Audit Report</h3>
+        <div class="price">$299</div>
+        <div class="price-note">one-time, no subscription</div>
+        <ul class="pricing-features">
+          <li>Full stack audit delivered in 48–72 hours</li>
+          <li>ROI math included</li>
+          <li>30-minute debrief call included</li>
+          <li>No subscription, no lock-in</li>
+        </ul>
+        <a href="mailto:shane@rockatansky.co" class="btn btn-primary pricing-cta">Start My Audit → $299</a>
+      </div>
+
+      <!-- Option B -->
+      <div class="pricing-card">
+        <div class="pricing-label">Option B</div>
+        <h3>Ongoing Stack Management</h3>
+        <div class="price">$149<span style="font-size:1rem;font-weight:500;color:var(--gray-400)">/mo</span></div>
+        <div class="price-note">month-to-month</div>
+        <ul class="pricing-features">
+          <li>Everything in Option A (audit in first week)</li>
+          <li>Quarterly re-audits as stack evolves</li>
+          <li>New tool recommendations as your needs change</li>
+          <li>Vendor negotiation support (renewals, cancellations)</li>
+          <li>Slack access for ad-hoc tool questions</li>
+        </ul>
+        <a href="mailto:shane@rockatansky.co" class="btn btn-primary pricing-cta">Get Started → $149/mo</a>
+      </div>
+
+      <!-- Option C -->
+      <div class="pricing-card">
+        <div class="pricing-label">Option C</div>
+        <h3>Done-For-You Consolidation</h3>
+        <div class="price">$499<span style="font-size:1rem;font-weight:500;color:var(--gray-400)"> + $99/mo</span></div>
+        <div class="price-note">one-time setup + monthly support</div>
+        <ul class="pricing-features">
+          <li>Full audit</li>
+          <li>We handle the cancellations and migrations for you</li>
+          <li>60-day support window post-consolidation</li>
+          <li>For companies that want this off their plate entirely</li>
+        </ul>
+        <a href="mailto:shane@rockatansky.co" class="btn btn-primary pricing-cta">Get Started → $499</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GUARANTEE ── -->
+<section id="guarantee">
+  <div class="container">
+    <div class="guarantee-box">
+      <span class="guarantee-icon">🛡️</span>
+      <h2>If we don't find $500/month in savings — the audit is free.</h2>
+      <p>We've never had to give a refund. But if we go through your entire stack and can't identify at least <strong>$500/month in savings opportunities</strong>, you pay nothing.</p>
+      <p class="guarantee-sub">The audit pays for itself if we find $300+/mo in savings — which we do in over 90% of audits.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section id="testimonials">
+  <div class="container">
+    <div class="text-center">
+      <div class="tag">Results</div>
+      <h2 class="section-title">What clients say</h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">We found $1,400/month in tools we'd completely forgotten about. The audit paid for itself 56 times over.</p>
+        <div class="testimonial-author">— Founder, 12-person SaaS company</div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">I thought we had a pretty lean stack. Turns out we had three overlapping project management tools. Fixed in a week.</p>
+        <div class="testimonial-author">— Ops Manager, 35-person services firm</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section id="faq">
+  <div class="container">
+    <div class="text-center">
+      <div class="tag">FAQ</div>
+      <h2 class="section-title">Common questions</h2>
+    </div>
+
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary class="faq-question">How long does it take?</summary>
+        <p class="faq-answer">Intake form is 10 minutes. Report delivered in 48–72 hours.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question">Do you need access to our accounts?</summary>
+        <p class="faq-answer">No. Just a list of tools and costs. You keep full control of your accounts throughout.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question">What if we're not sure what everything costs?</summary>
+        <p class="faq-answer">That's fine — we can work with estimates and help you find the actuals.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question">What size company is this for?</summary>
+        <p class="faq-answer">5–100 employees with $2k+/mo in SaaS spend. Below that, the savings don't justify the audit.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question">Can you help us actually make the changes?</summary>
+        <p class="faq-answer">Yes — that's our Done-For-You tier (Option C). We handle the cancellations and migrations so you don't have to.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question">We already know what we're paying for. Why do we need this?</summary>
+        <p class="faq-answer">Most founders say that. Then we find $800/mo in tools their team stopped using 6 months ago. The problem isn't awareness — it's that no one has time to sit down and map it all. That's what we do.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question">Can't we do this ourselves?</summary>
+        <p class="faq-answer">You absolutely can. It'll take 3–4 hours of someone's time, plus they won't know which tools overlap with what. We do 10 of these a week — we pattern-match across hundreds of stacks. You get the benefit of that without spending your team's time.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ── FINAL CTA ── -->
+<section id="final-cta">
+  <div class="container">
+    <h2>Stop leaving <span>$1,000/month</span> on the table.</h2>
+    <p>A 10-minute intake form. A 48-hour turnaround. A report that tells you exactly where your money is going — and exactly what to do about it.</p>
+    <div class="final-cta-group">
+      <a href="mailto:shane@rockatansky.co" class="btn btn-primary-large">Start My Audit → $299</a>
+      <a href="mailto:shane@rockatansky.co" class="btn btn-ghost">Book a free 15-min call →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>© 2026 saasaudit.io &nbsp;·&nbsp; <a href="mailto:shane@rockatansky.co">shane@rockatansky.co</a></p>
+</footer>
+
+</body>
+</html>
