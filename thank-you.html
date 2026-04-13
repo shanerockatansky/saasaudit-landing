@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You're In — saasaudit.io</title>
+  <meta name="description" content="Your audit is confirmed. Here's exactly what to do next.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0f172a;
+      --navy-mid: #1e293b;
+      --teal: #14b8a6;
+      --teal-dark: #0d9488;
+      --teal-light: #5eead4;
+      --white: #ffffff;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-400: #94a3b8;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --text: #1e293b;
+      --radius: 8px;
+      --radius-lg: 16px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: var(--text);
+      background: var(--navy);
+      line-height: 1.6;
+      font-size: 16px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* NAV */
+    nav {
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .nav-logo {
+      color: var(--white);
+      font-weight: 800;
+      font-size: 1.1rem;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--teal); }
+
+    /* HERO */
+    .confirm-hero {
+      padding: 64px 24px 0;
+      text-align: center;
+    }
+    .confirm-icon {
+      width: 72px;
+      height: 72px;
+      background: rgba(20,184,166,0.15);
+      border: 2px solid rgba(20,184,166,0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 2rem;
+      animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .confirm-hero h1 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .confirm-hero h1 span { color: var(--teal); }
+    .confirm-hero p {
+      font-size: 1.1rem;
+      color: var(--gray-400);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* TIMELINE */
+    .timeline-section {
+      padding: 56px 24px;
+    }
+    .timeline-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 32px;
+      text-align: center;
+    }
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--teal), rgba(20,184,166,0.1));
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 36px;
+    }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-dot {
+      position: absolute;
+      left: -27px;
+      top: 4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: 2px solid var(--navy);
+      box-shadow: 0 0 0 3px rgba(20,184,166,0.2);
+    }
+    .timeline-item.upcoming .timeline-dot {
+      background: var(--navy-mid);
+      border-color: var(--gray-600);
+      box-shadow: none;
+    }
+    .timeline-time {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 4px;
+    }
+    .timeline-item.upcoming .timeline-time { color: var(--gray-600); }
+    .timeline-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .timeline-item.upcoming .timeline-title { color: var(--gray-400); }
+    .timeline-desc {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      line-height: 1.6;
+    }
+
+    /* INSTRUCTIONS CARD */
+    .instructions-section {
+      padding: 0 24px 56px;
+    }
+    .card {
+      background: var(--navy-mid);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+    }
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .card-subtitle {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    .step-list {
+      list-style: none;
+      margin-bottom: 32px;
+    }
+    .step-list li {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      align-items: flex-start;
+    }
+    .step-list li:last-child { margin-bottom: 0; }
+    .step-num {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(20,184,166,0.15);
+      border: 1px solid rgba(20,184,166,0.3);
+      color: var(--teal);
+      font-size: 0.8rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .step-content {}
+    .step-content strong {
+      display: block;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .step-content p {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      line-height: 1.55;
+    }
+    .step-content code {
+      display: inline-block;
+      background: rgba(20,184,166,0.1);
+      color: var(--teal-light);
+      font-family: 'SF Mono', 'Fira Code', 'Fira Mono', monospace;
+      font-size: 0.8rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+      margin: 28px 0;
+    }
+
+    .send-to {
+      background: rgba(20,184,166,0.08);
+      border: 1px solid rgba(20,184,166,0.2);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+    }
+    .send-to-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+    .send-to-email {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .send-to-note {
+      font-size: 0.8rem;
+      color: var(--gray-600);
+      margin-top: 6px;
+    }
+
+    /* PROVIDER TABS */
+    .provider-section {
+      margin-bottom: 28px;
+    }
+    .provider-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .provider-tab {
+      padding: 7px 16px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1.5px solid rgba(255,255,255,0.1);
+      color: var(--gray-400);
+      background: transparent;
+      transition: all 0.15s;
+    }
+    .provider-tab.active {
+      background: rgba(20,184,166,0.15);
+      border-color: rgba(20,184,166,0.4);
+      color: var(--teal-light);
+    }
+    .provider-instructions { display: none; }
+    .provider-instructions.active { display: block; }
+    .provider-instructions ol {
+      list-style: none;
+      counter-reset: step-counter;
+    }
+    .provider-instructions ol li {
+      counter-increment: step-counter;
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      line-height: 1.6;
+      padding: 8px 0 8px 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+    }
+    .provider-instructions ol li:last-child { border-bottom: none; }
+    .provider-instructions ol li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      color: var(--gray-400);
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* GUARANTEE STRIP */
+    .guarantee-strip {
+      padding: 0 24px 56px;
+    }
+    .guarantee-inner {
+      border: 1px solid rgba(20,184,166,0.2);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .guarantee-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
+    .guarantee-text strong {
+      display: block;
+      color: var(--white);
+      font-size: 0.9375rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .guarantee-text p {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      line-height: 1.55;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 28px 24px;
+      text-align: center;
+    }
+    footer p {
+      color: #475569;
+      font-size: 0.8rem;
+    }
+    footer a { color: var(--teal); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">saas<span>audit</span>.io</a>
+</nav>
+
+<div class="confirm-hero">
+  <div class="container">
+    <div class="confirm-icon">✓</div>
+    <h1>Payment confirmed. Your audit <span>starts now.</span></h1>
+    <p>We received your order. Follow the steps below to send us your billing data — the sooner we get it, the sooner your report lands.</p>
+  </div>
+</div>
+
+<div class="timeline-section">
+  <div class="container">
+    <div class="timeline-label">What happens next</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-time">Right now</div>
+        <div class="timeline-title">Send us your billing export</div>
+        <div class="timeline-desc">Follow the instructions below to export your last 3 months of cloud billing data and email it to us.</div>
+      </div>
+      <div class="timeline-item upcoming">
+        <div class="timeline-dot"></div>
+        <div class="timeline-time">Within 48 hours of receiving your file</div>
+        <div class="timeline-title">You receive your audit report</div>
+        <div class="timeline-desc">A ranked list of findings with specific dollar amounts and remediation steps for each one.</div>
+      </div>
+      <div class="timeline-item upcoming">
+        <div class="timeline-dot"></div>
+        <div class="timeline-time">Scheduled at your convenience</div>
+        <div class="timeline-title">30-minute debrief call</div>
+        <div class="timeline-desc">We walk through the report together. Engineering gets the specifics. Finance gets the number.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="instructions-section">
+  <div class="container">
+    <div class="card">
+      <div class="card-title">How to export your billing data</div>
+      <div class="card-subtitle">Select your cloud provider below for step-by-step export instructions. Takes about 5 minutes.</div>
+
+      <div class="provider-section">
+        <div class="provider-tabs">
+          <button class="provider-tab active" onclick="showProvider('aws', this)">AWS</button>
+          <button class="provider-tab" onclick="showProvider('azure', this)">Azure</button>
+          <button class="provider-tab" onclick="showProvider('gcp', this)">GCP</button>
+          <button class="provider-tab" onclick="showProvider('multi', this)">Multiple providers</button>
+        </div>
+
+        <div id="aws" class="provider-instructions active">
+          <ol>
+            <li>Log into the AWS Console and go to <strong>Billing and Cost Management</strong></li>
+            <li>Click <strong>Bills</strong> in the left sidebar</li>
+            <li>Select the current month, then click <strong>Download CSV</strong></li>
+            <li>Repeat for the previous 2 months (use the month dropdown at the top)</li>
+            <li>You'll have 3 CSV files — attach all three to your email</li>
+          </ol>
+        </div>
+
+        <div id="azure" class="provider-instructions">
+          <ol>
+            <li>Log into the Azure Portal and go to <strong>Cost Management + Billing</strong></li>
+            <li>Select your subscription, then click <strong>Cost analysis</strong></li>
+            <li>Set the date range to the last 3 months</li>
+            <li>Click <strong>Download</strong> and select <strong>CSV</strong></li>
+            <li>Attach the exported file to your email</li>
+          </ol>
+        </div>
+
+        <div id="gcp" class="provider-instructions">
+          <ol>
+            <li>Log into the Google Cloud Console and go to <strong>Billing</strong></li>
+            <li>Select your billing account, then click <strong>Reports</strong></li>
+            <li>Set the time range to the last 3 months</li>
+            <li>Click <strong>Download CSV</strong> in the top right</li>
+            <li>Attach the exported file to your email</li>
+          </ol>
+        </div>
+
+        <div id="multi" class="provider-instructions">
+          <ol>
+            <li>Export a billing CSV from each provider you use (follow the instructions for each above)</li>
+            <li>Attach all files to a single email — label each file so we know which provider it's from</li>
+            <li>Let us know in the email body which providers you're on and roughly what percentage of spend is on each</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="step-list">
+        <li>
+          <span class="step-num">1</span>
+          <div class="step-content">
+            <strong>Export your last 3 months of billing data</strong>
+            <p>Use the instructions above for your provider. CSV format preferred — PDF works too if that's all that's available.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <div class="step-content">
+            <strong>Email the file(s) to us</strong>
+            <p>Attach your export(s) and send to the address below. Include your company name and roughly how many people are on your engineering team.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <div class="step-content">
+            <strong>We'll confirm receipt within a few hours</strong>
+            <p>You'll get a reply confirming we have your file and when to expect your report. Report is delivered within 48 hours of receiving your data.</p>
+          </div>
+        </li>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="send-to">
+        <div class="send-to-label">Send your files to</div>
+        <div class="send-to-email">dan@saasaudit.io</div>
+        <div class="send-to-note">Subject line: "Cloud Audit — [Your Company Name]"</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="guarantee-strip">
+  <div class="container">
+    <div class="guarantee-inner">
+      <div class="guarantee-icon">🛡️</div>
+      <div class="guarantee-text">
+        <strong>The guarantee still applies</strong>
+        <p>If we go through your billing data and can't identify at least $500/month in recoverable spend, we'll refund your payment in full. No questions asked.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>Questions? Email <a href="mailto:dan@saasaudit.io">dan@saasaudit.io</a> &nbsp;·&nbsp; © 2026 saasaudit.io</p>
+</footer>
+
+<script>
+  function showProvider(id, btn) {
+    document.querySelectorAll('.provider-instructions').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.provider-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
